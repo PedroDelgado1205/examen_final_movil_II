@@ -52,6 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // Función para manejar el cambio de estado del checkbox de una tarea.
   void _handleCheckboxChanged(Task task, bool? isComplete) {
   setState(() {
     task.isComplete = isComplete ?? false; // Actualiza el estado de completado de la tarea.
@@ -81,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   return TaskItem(
                     task: task,
                     onDelete: () => _deleteTask(task), 
-                    onCheckboxChanged: (bool? isComplete) => _handleCheckboxChanged(task, isComplete),
+                    onCheckboxChanged: (bool? isComplete) => _handleCheckboxChanged(task, isComplete),// Se cambia el estado de la tarea
                   );
                 },
               ),

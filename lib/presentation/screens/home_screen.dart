@@ -5,6 +5,7 @@ import '../../domain/usecases/add_task_usecase.dart';
 import '../../domain/usecases/delete_task_usecase.dart';
 import '../widgets/shared/task_item.dart';
 
+// La pantalla principal de la app, donde veremos nuestras tareas.
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -14,35 +15,48 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  // Lista privada para almacenar las tareas. Inicia vacía.
   final List<Task> _tasks = [];
+
+  // Las variables para manejar los casos de uso de agregar y borrar tareas.
   late AddTaskUseCase _addTaskUseCase;
   late DeleteTaskUseCase _deleteTaskUseCase;
 
   @override
   void initState() {
     super.initState();
+    // Inicializamos los casos de uso, pasándoles la lista de tareas.
     _addTaskUseCase = AddTaskUseCase(_tasks);
     _deleteTaskUseCase = DeleteTaskUseCase(_tasks);
   }
 
+  // Función para agregar una tarea a la lista.
   void _addTask(String title, String description) {
     setState(() {
       _addTaskUseCase.call(Task(title: title, description: description));
     });
   }
 
+  // Función para borrar una tarea de la lista.
   void _deleteTask(Task task) {
     setState(() {
       _deleteTaskUseCase.call(task);
     });
   }
 
+  // Muestra un cuadro de diálogo para agregar una nueva tarea.
   void _showAddTaskDialog() {
     showDialog(
       context: context,
       builder: (context) => AddTaskScreen(onAddTask: _addTask),
     );
   }
+
+  void _handleCheckboxChanged(Task task, bool? isComplete) {
+  setState(() {
+    task.isComplete = isComplete ?? false; // Actualiza el estado de completado de la tarea.
+  });
+}
 
   @override
   Widget build(BuildContext context) {
@@ -52,9 +66,11 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
+        // Si no hay tareas, mostramos un mensaje amigable. Si hay, las mostramos en una lista.
         child: _tasks.isEmpty
             ? Center(
-                child: Text('No hay tareas disponibles!!!\nPara agragar una tarea usa el +',
+                child: Text(
+                  'No hay tareas disponibles!!!\nPara agregar una tarea usa el +',
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
               )
@@ -64,11 +80,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   final task = _tasks[index];
                   return TaskItem(
                     task: task,
-                    onDelete: () => _deleteTask(task),
+                    onDelete: () => _deleteTask(task), 
+                    onCheckboxChanged: (bool? isComplete) => _handleCheckboxChanged(task, isComplete),
                   );
                 },
               ),
       ),
+      // Botón flotante para agregar una nueva tarea.
       floatingActionButton: FloatingActionButton(
         onPressed: _showAddTaskDialog,
         child: const Icon(Icons.add),

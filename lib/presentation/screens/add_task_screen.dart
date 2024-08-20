@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
+// Pantalla de diálogo para agregar una nueva tarea.
 class AddTaskScreen extends StatefulWidget {
-  final Function(String, String) onAddTask;
+  final Function(String, String) onAddTask; // Función que se ejecutará cuando se agregue una nueva tarea.
 
   const AddTaskScreen({super.key, required this.onAddTask});
 
@@ -11,45 +12,49 @@ class AddTaskScreen extends StatefulWidget {
 }
 
 class _AddTaskScreenState extends State<AddTaskScreen> {
+  // Controladores para manejar el texto del título y la descripción.
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
 
+  // Función para manejar el envío de la tarea.
   void _submit() {
     final title = _titleController.text;
     final description = _descriptionController.text;
+
+    // Solo agregamos la tarea si ambos campos tienen texto.
     if (title.isNotEmpty && description.isNotEmpty) {
-      widget.onAddTask(title, description);
-      Navigator.of(context).pop();
+      widget.onAddTask(title, description); // Llama a la función pasada desde el widget padre.
+      Navigator.of(context).pop(); // Cierra el cuadro de diálogo.
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Añadir tarea'),
+      title: const Text('Añadir tarea'), // Título del diálogo.
       content: Column(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: MainAxisSize.min, // Hace que la columna se ajuste al contenido.
         children: [
           TextField(
-            controller: _titleController,
-            decoration: const InputDecoration(labelText: 'Tarea'),
-            style: Theme.of(context).textTheme.titleLarge,
+            controller: _titleController, // Conecta el campo de texto con su controlador.
+            decoration: const InputDecoration(labelText: 'Tarea'), // Etiqueta para el campo de título.
+            style: Theme.of(context).textTheme.titleLarge, // Estilo del texto para que se vea consistente con la app.
           ),
           TextField(
-            controller: _descriptionController,
-            decoration: const InputDecoration(labelText: 'Descripcion'),
-            style: Theme.of(context).textTheme.titleSmall,
+            controller: _descriptionController, // Conecta el campo de texto con su controlador.
+            decoration: const InputDecoration(labelText: 'Descripcion'), // Etiqueta para el campo de descripción.
+            style: Theme.of(context).textTheme.titleSmall, // Estilo del texto para la descripción.
           ),
         ],
       ),
       actions: [
         TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
+          onPressed: () => Navigator.of(context).pop(), // Cierra el diálogo sin hacer nada.
+          child: const Text('Cancel'), // Botón para cancelar.
         ),
         ElevatedButton(
-          onPressed: _submit,
-          child: const Text('Add'),
+          onPressed: _submit, // Llama a la función _submit para agregar la tarea.
+          child: const Text('Add'), // Botón para añadir la tarea.
         ),
       ],
     );
